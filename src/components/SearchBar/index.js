@@ -32,31 +32,53 @@ class SearchBar extends Component {
         const res = await axios('https://api.github.com/users/felipefialho');
         return await res.data;
     }
+
+    async getUserData(userName) {
+        const res = await axios('https://api.github.com/users/' + userName.trim());
+        return await res.data;
+    }
     constructor(...args) {
         super(...args);
-        this.state = {data: null};
+        this.state = {
+            searchValue: ' ',
+            data: null
+        };
     }
     componentDidMount() {
         if (!this.state.data) {
             this.getData().then(data => {
                 console.log(data);
-                this.setState(data);
+                this.setState({data});
             }).catch(err => { 
                 console.log(err);
             });
         }
     }
 
+    handleChange = event => {
+        this.setState({ searchValue: event.target.value });
+    }
+
+    handleSubmit = event => {
+        event.preventDefault();
+        const searchValue = this.state.searchValue;
+
+        this.getUserData(searchValue);
+
+    
+      }
+    
+
     render() {
         return (
             <Wrapper>
-               <form>
+               <form onSubmit={this.handleSubmit}>
                <Title>
                     Digite o nome do usuário que deseja pesquisar
                 </Title>
 
-                  <Input />
-                {this.state.data}
+                  <Input type="text" name="search" value={this.state.searchValue} onChange={this.handleChange} />
+
                </form>
               
             </Wrapper>
