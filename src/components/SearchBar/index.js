@@ -41,18 +41,11 @@ class SearchBar extends Component {
         super(...args);
         this.state = {
             searchValue: ' ',
-            data: null
+            userData: ' '
         };
     }
     componentDidMount() {
-        if (!this.state.data) {
-            this.getData().then(data => {
-                console.log(data);
-                this.setState({data});
-            }).catch(err => { 
-                console.log(err);
-            });
-        }
+     
     }
 
     handleChange = event => {
@@ -63,8 +56,8 @@ class SearchBar extends Component {
         event.preventDefault();
         const searchValue = this.state.searchValue;
 
-        this.getUserData(searchValue);
-
+        this.getUserData(searchValue)
+            .then((response) => this.setState({userData:response}))
     
       }
     
@@ -80,6 +73,13 @@ class SearchBar extends Component {
                   <Input type="text" name="search" value={this.state.searchValue} onChange={this.handleChange} />
 
                </form>
+
+               <p>
+                <img src={this.state.userData.avatar_url} />
+                {this.state.userData.login}
+                {this.state.userData.html_url}
+                
+               </p>
               
             </Wrapper>
             
